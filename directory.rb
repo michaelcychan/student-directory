@@ -32,7 +32,8 @@ def input_students
     puts "Favourite coding language?"
     lang = gets.chomp
     students << {name: name, cohort: cohort.to_sym, cob: cob.to_sym, lang: lang.to_sym}
-    puts "Now we have #{students.count} students"
+    puts "Now we have #{students.count} students" if students.count > 1
+    puts "Now we have 1 student" if students.count == 1
     # get another name from the user
     name = gets.chomp
   end
@@ -67,7 +68,9 @@ end
 
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+  puts "Overall, we have #{names.count} great students" if names.count > 1
+  puts "Now, we have 1 student" if names.count == 1
+  puts "We currently do not have any student" if names.count == 0
 end
 
 def print_special_names(names)
