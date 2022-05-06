@@ -42,8 +42,8 @@ def print_header
 end
 
 def print(names)
-  names.each do |name|
-    puts "#{name[:name]} (#{name[:cohort]} cohort)"
+  names.each_with_index do |name, ind|
+    puts "#{ind + 1}: #{name[:name]} (#{name[:cohort]} cohort)"
   end
 end
 
@@ -51,7 +51,15 @@ def print_footer(names)
   puts "Overall, we have #{names.count} great students"
 end
 
+def print_special_names(names)
+  puts "The names of the below students starts with 'A', 'M', or 'L'; and is less than 6 characters"
+  names.each do |name|
+    puts name[:name] if name[:name][0].match(/[AML]/) && name[:name].length < 6
+  end
+end
+
 students = input_students
 print_header
 print(students)
 print_footer(students)
+print_special_names(students)
