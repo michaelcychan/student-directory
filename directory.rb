@@ -25,7 +25,13 @@ def input_students
   # while the name is not empty, repeat this code
   while !name.empty? do
     # add the student hash to the array
-    students << {name: name, cohort: :november}
+    puts "Which cohort?"
+    cohort = gets.chomp
+    puts "Country of birth?"
+    cob = gets.chomp
+    puts "Favourite coding language?"
+    lang = gets.chomp
+    students << {name: name, cohort: cohort.to_sym, cob: cob.to_sym, lang: lang.to_sym}
     puts "Now we have #{students.count} students"
     # get another name from the user
     name = gets.chomp
@@ -43,9 +49,18 @@ end
 
 def print(names)
   names.each_with_index do |name, ind|
-    puts "#{ind + 1}: #{name[:name]} (#{name[:cohort]} cohort)"
+    puts "#{ind + 1}: #{name[:name]} (#{name[:cohort]} cohort). Country of Birth: #{name[:cob]}; Favourite coding language: #{name[:lang]}"
   end
 end
+
+def print_while(names)
+  counter = 0
+  while counter < names.length do
+    puts "#{counter + 1}: #{names[counter][:name]} (#{names[counter][:cohort]} cohort). Country of Birth: #{names[counter][:cob]}; Favourite coding language: #{names[counter][:lang]}"
+    counter += 1
+  end
+end
+
 
 def print_footer(names)
   puts "Overall, we have #{names.count} great students"
@@ -61,5 +76,6 @@ end
 students = input_students
 print_header
 print(students)
+print_while(students)
 print_footer(students)
 print_special_names(students)
