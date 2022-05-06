@@ -40,17 +40,21 @@ def input_students
   students
 end
 
+$text_width = 50
 
 # defining actions
 def print_header
-  puts "The students of Villains Academy"
-  puts "-------------"
+  puts "The students of Villains Academy".center($text_width,'-')
+  puts "-".center($text_width,'-')
 end
 
 def print(names)
   names.each_with_index do |name, ind|
-    puts "#{ind + 1}: #{name[:name]} (#{name[:cohort]} cohort). Country of Birth: #{name[:cob]}; Favourite coding language: #{name[:lang]}"
+    puts "#{ind + 1}: #{name[:name]} (#{name[:cohort]} cohort)".center($text_width,'-')
+    puts "Country of Birth: #{name[:cob]}".center($text_width, '-')
+    puts "Favourite coding language: #{name[:lang]}".center($text_width,'-')
   end
+  puts "-".center($text_width,'-')
 end
 
 def print_while(names)
