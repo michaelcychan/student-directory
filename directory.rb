@@ -49,7 +49,7 @@ def print_header
   puts "-".center($text_width,'-')
 end
 
-def print(names)
+def prints(names)
   names.each_with_index do |name, ind|
     puts "#{ind + 1}: #{name[:name]} (#{name[:cohort]} cohort)".center($text_width,'-')
     puts "Country of Birth: #{name[:cob]}".center($text_width, '-')
@@ -66,6 +66,38 @@ def print_while(names)
   end
 end
 
+def printgroup_lang(names)
+  groupbylang = Hash.new
+  names.map do |name|
+    groupbylang[name[:lang].to_sym] = [] if groupbylang[name[:lang].to_sym] == nil
+    groupbylang[name[:lang].to_sym].push(name[:name])
+  end
+  groupbylang.each do |k, v|
+    puts "Having #{k} as the favourite coding language: #{v}."
+  end
+end
+
+def printgroup_cob(names)
+  groupbycob = Hash.new
+  names.map do |name|
+    groupbycob[name[:cob].to_sym] = [] if groupbycob[name[:cob].to_sym] == nil
+    groupbycob[name[:cob].to_sym].push(name[:name])
+  end
+  groupbycob.each do |k, v|
+    puts "#{k} as country of birth: #{v}."
+  end
+end
+
+def printgroup_cohort(names)
+  groupbycohort = Hash.new
+  names.map do |name|
+    groupbycohort[name[:cohort].to_sym] = [] if groupbycohort[name[:cohort].to_sym] == nil
+    groupbycohort[name[:cohort].to_sym].push(name[:name])
+  end
+  groupbycohort.each do |k, v|
+    puts "Cohort #{k}: #{v}."
+  end
+end
 
 def print_footer(names)
   puts "Overall, we have #{names.count} great students" if names.count > 1
@@ -82,7 +114,14 @@ end
 
 students = input_students
 print_header
-print(students)
-print_while(students)
+prints(students)
+# print_while(students)
 print_footer(students)
 print_special_names(students)
+puts "-".center(50, '-')
+printgroup_lang(students)
+puts "-".center(50, '-')
+printgroup_cohort(students)
+puts "-".center(50, '-')
+printgroup_cob(students)
+puts "-".center(50, '-')
