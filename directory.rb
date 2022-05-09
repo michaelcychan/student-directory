@@ -1,6 +1,6 @@
 # Creating global array for every methods to use
 @students = []
-$text_width = 50
+$text_width = 35
 
 def input_students
   puts "Please enter the names of the students"
@@ -94,13 +94,6 @@ def print_special_names
   end
 end
 
-def print_menu
-  puts "1. Input students details"
-  puts "2. Show the current students"
-  puts "3. Save the list to students.csv"
-  puts "9. Exit"
-end
-
 def show_students
   print_header
   print_student_list
@@ -108,7 +101,7 @@ def show_students
 end
 
 def save_students
-  # opening file for writing
+  # opening file for writing ("w")
   file = File.open("students.csv", "w")
   # iterate over the array of students
   @students.each do |student|
@@ -119,6 +112,24 @@ def save_students
   file.close
 end
 
+def load_students
+  # the r indicates it is for reading the file
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, cohort, cob, lang = line.split(",")
+    @students << {name: name, cohort: cohort.to_sym, cob: cob.to_sym, lang: lang.to_sym}
+  end
+  file.close
+end
+
+def print_menu
+  puts "1. Input students details"
+  puts "2. Show the current students"
+  puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
+  puts "9. Exit"
+end
+
 def process(selection)
   case selection
   when "1"
@@ -127,25 +138,27 @@ def process(selection)
     show_students
   when "3"
     save_students
+  when "4"
+    load_students
   when "9"
     exit
   else
     puts "I can't understand, please enter the correct number."
   end
 end
-    
 
 def interactive_menu
   loop do
     print_menu
     process(gets.chomp)
-    # 3. do what the user has requested
   end
 end
 
 interactive_menu
 
+=begin
 # Methods to be incorporated (need to remove arguments):
+
 print_special_names(students)
 puts "-".center(50, '-')
 printgroup_lang(students)
@@ -158,7 +171,6 @@ puts "-".center(50, '-')
 # Unused methods:
 # print_while(students)
 
-=begin
 # students name in an array
 students = [
   {name: "Dr. Hannibal Lecter", cohort: :november},
