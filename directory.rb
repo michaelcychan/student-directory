@@ -115,15 +115,21 @@ def get_filename
 end
 
 def save_students
-  # opening file for writing ("w")
-  file = File.open(@filename, "w")
-  # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:cob], student[:lang]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  CSV.open(@filename, 'w') do |csv|
+    @students.each do |student|
+      csv << [student[:name], student[:cohort], student[:cob], student[:lang]] 
+    end
   end
-  file.close
+  
+  # # opening file for writing ("w")
+  # file = File.open(@filename, "w")
+  # # iterate over the array of students
+  # @students.each do |student|
+  #   student_data = [student[:name], student[:cohort], student[:cob], student[:lang]]
+  #   csv_line = student_data.join(",")
+  #   file.puts csv_line
+  # end
+  # file.close
   puts "#{@students.count} students successfully written to #{@filename}."
 end
 
