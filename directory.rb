@@ -1,6 +1,13 @@
+require 'csv' # calling the CSV library
+
 # Creating global array for every methods to use
 @students = []
 $text_width = 35
+@filename = ""
+
+def import_student(name, cohort, cob, lang)
+  @students << {name: name, cohort: cohort.to_sym, cob: cob.to_sym, lang: lang.to_sym}
+end
 
 def input_students
   puts "Please enter the names of the students"
@@ -16,7 +23,7 @@ def input_students
     cob = STDIN.gets.chomp
     puts "Favourite coding language?"
     lang = STDIN.gets.chomp
-    @students << {name: name, cohort: cohort.to_sym, cob: cob.to_sym, lang: lang.to_sym}
+    import_student(name, cohort, cob, lang)
     puts "Now we have #{@students.count} students" if @students.count > 1
     puts "Now we have 1 student" if @students.count == 1
     # get another name from the user
@@ -100,9 +107,16 @@ def show_students
   print_footer
 end
 
+def get_filename
+  puts "Please enter file name: "
+  puts "leave blank to use default file (students.csv)"
+  @filename = STDIN.gets.chomp
+  @filename = "students.csv" if @filename == ""
+end
+
 def save_students
   # opening file for writing ("w")
-  file = File.open("students.csv", "w")
+  file = File.open(@filename, "w")
   # iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:cob], student[:lang]]
@@ -110,26 +124,35 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "#{@students.count} students successfully written to #{@filename}."
 end
 
-def load_students(filename = "students.csv")
-  # the r indicates it is for reading the file
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort, cob, lang = line.split(",")
-    @students << {name: name, cohort: cohort.to_sym, cob: cob.to_sym, lang: lang.to_sym}
+def load_students 
+  # Using CSV library to read file:
+  CSV.foreach((@filename), col_sep: ",") do |line|
+    name, cohort, cob, lang = line
+    import_student(name, cohort, cob, lang)
   end
-  file.close
+
+  # # the r indicates it is for reading the file
+  # file = File.open(@filename, "r")
+  # file.readlines.each do |line|
+  #   name, cohort, cob, lang = line.split(",")
+  #   import_student(name, cohort, cob, lang)
+  # end
+  # file.close
+
+  puts "#{@filename} successfully loaded."
 end
 
 def try_load_students
-  filename = ARGV.first
-  return if filename.nil? # get out of this method if no filename is given
-  if File.exist?(filename) # given file existed
-    load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
+  @filename = ARGV.first
+  @filename = "students.csv" if (@filename.nil? || @filename == "") # use default file
+  if File.exist?(@filename) # file exists
+    load_students
+    puts "Loaded #{@students.count} students from #{@filename}"
   else # file does not exist
-    puts "Sorry, #{filename} does not exist."
+    puts "Sorry, #{@filename} does not exist."
     exit
   end
 end
@@ -137,8 +160,9 @@ end
 def print_menu
   puts "1. Input students details"
   puts "2. Show the current students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to #{@filename}"
+  puts "4. Load the list from #{@filename}"
+  puts "5. Change save filename"
   puts "9. Exit"
 end
 
@@ -152,6 +176,8 @@ def process(selection)
     save_students
   when "4"
     load_students
+  when "5"
+    get_filename
   when "9"
     exit
   else
